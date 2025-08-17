@@ -22,7 +22,7 @@ const RecentDonationRequests = () => {
 
 
   return (
-    <div className="py-16 px-6 max-w-7xl mx-auto">
+    <div className="py-16 px-6 w-10/12 mx-auto">
       <h2 className="text-3xl font-bold text-center text-[#E63946] mb-10">
         Recent Blood Donation Requests 🩸
       </h2>
