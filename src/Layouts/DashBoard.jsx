@@ -12,8 +12,6 @@ const DashboardLayout = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const { userRole } = use(AuthContext);
 
-  console.log(userRole)
-
 
   if (!userRole) {
     return <LoadingScreen></LoadingScreen>

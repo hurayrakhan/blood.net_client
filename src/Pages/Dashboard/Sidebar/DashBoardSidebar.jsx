@@ -43,7 +43,6 @@ const DashboardSidebar = ({ closeSidebar }) => {
   const { userRole, signOutUser } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  console.log(userRole)
 
   const handleLogout = () => {
     signOutUser()
