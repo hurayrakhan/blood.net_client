@@ -32,7 +32,13 @@ export default function FundingPage() {
       <FundingSummaryCard user={user} />
 
       <div className="bg-white shadow rounded-lg p-6">
-        <h2 className="text-xl font-semibold text-[#E63946] mb-4">Donate Now 💳</h2>
+        <div className='flex justify-between'>
+          <h2 className="text-xl font-semibold text-[#E63946] mb-4">Donate Now 💳</h2>
+          <div className='flex'>
+            <img className='h-16 object-cover' src="https://i.ibb.co.com/pm0LMdx/realistic-credit-card-design-23-2149126090.jpg" alt="" />
+            <img className='h-16 object-cover' src="https://i.ibb.co.com/22M9KC6/debit-card-purple-color-48190-234.jpg" alt="" />
+          </div>
+        </div>
         <Elements stripe={stripePromise}>
           <CheckoutForm user={user} />
         </Elements>
