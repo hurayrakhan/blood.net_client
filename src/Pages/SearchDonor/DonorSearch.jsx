@@ -9,13 +9,13 @@ import { Helmet } from 'react-helmet-async';
 const DonorSearchPage = () => {
   const { user } = useContext(AuthContext);
   const [search, setSearch] = useState('');
-  const [view, setView] = useState('grid'); // 👈 grid or list
+  const [view, setView] = useState('list'); // 👈 grid or list
   const navigate = useNavigate();
 
   const { data: donors = [], isLoading } = useQuery({
     queryKey: ['donors', search],
     queryFn: async () => {
-      const res = await axiosSecure.get(`/users`);
+      const res = await axiosSecure.get(`/users?search=${encodeURIComponent(search)}`);
       return res.data;
     },
   });
