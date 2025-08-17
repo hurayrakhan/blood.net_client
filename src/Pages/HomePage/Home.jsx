@@ -22,7 +22,6 @@ const Home = () => {
       <FundingCTA></FundingCTA>
       <StatisticsSection></StatisticsSection>
       <ContactSection></ContactSection>
-      <Footer></Footer>
     </div>
   );
 };
