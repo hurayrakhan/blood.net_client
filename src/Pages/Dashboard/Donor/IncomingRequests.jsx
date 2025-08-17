@@ -32,11 +32,9 @@ const IncomingRequests = () => {
       showCancelButton: true,
       confirmButtonText: 'Yes',
     });
-    console.log(result)
 
     if (result.isConfirmed) {
       const res = await axiosSecure.patch(`/donations/${id}`, { status: newStatus });
-      console.log(res)
       if (res.status === 200) {
         Swal.fire('Success', `Request marked as ${newStatus}`, 'success');
         refetch();
