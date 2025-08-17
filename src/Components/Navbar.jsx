@@ -1,5 +1,5 @@
-import React, { useContext, Fragment, useState } from 'react';
-import { Link, NavLink, useNavigate } from 'react-router-dom';
+import React, { useContext, Fragment, useState, useEffect } from 'react';
+import { Link, NavLink, useNavigate } from 'react-router';
 import { AuthContext } from '../Providers/AuthProvider';
 import { Menu, Transition } from '@headlessui/react';
 import { motion } from 'framer-motion';
@@ -28,6 +28,8 @@ export default function Navbar() {
   const { user, signOutUser } = useContext(AuthContext);
   const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [dbUser, setDbUser] = useState(null); // ✅ DB user
+  const [hoveredLink, setHoveredLink] = useState(null);
 
   const navLinks = [
     { to: '/', label: 'Home', icon: HomeIcon },
@@ -37,12 +39,28 @@ export default function Navbar() {
     { to: '/about', label: 'About', icon: InformationCircleIcon },
   ];
 
+  // ✅ Fetch user from backend using email
+  useEffect(() => {
+    if (user?.email) {
+      fetch(`https://assignment-12-server-ebon-beta.vercel.app/users/${user.email}`)
+        .then((res) => {
+          if (!res.ok) throw new Error('Failed to fetch user');
+          return res.json();
+        })
+        .then((data) => setDbUser(data))
+        .catch((err) => {
+          console.error(err);
+          setDbUser(null);
+        });
+    }
+  }, [user?.email]);
+
   const handleLogout = async () => {
     try {
       await signOutUser();
       Swal.fire({
         title: 'Logout Successful!',
-        text: `${user.displayName || 'User'} 👋`,
+        text: `${dbUser?.name || user?.email || 'User'} 👋`,
         icon: 'success',
         confirmButtonColor: '#E63946',
       }).then(() => {
@@ -58,9 +76,13 @@ export default function Navbar() {
     }
   };
 
+  const displayName = dbUser?.name || user?.email || 'User';
+  const avatarSrc =
+    dbUser?.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}`;
+
   return (
-    <div className='sticky top-0 bg-[#E63946] z-50'>
-      <nav className=" w-11/12 mx-auto py-3 flex items-center justify-between select-none">
+    <div className="sticky top-0 bg-[#E63946] z-50">
+      <nav className="w-11/12 mx-auto py-3 flex items-center justify-between select-none">
         {/* Logo */}
         <Link
           to="/"
@@ -69,7 +91,6 @@ export default function Navbar() {
           <span>Blood</span>
           <span className="text-[#FFDADA]">.net</span>
         </Link>
-
 
         {/* Logo & Mobile Toggle */}
         <div className="flex items-center md:hidden">
@@ -93,79 +114,72 @@ export default function Navbar() {
           </button>
         </div>
 
-
         {/* Nav Links */}
         <div className="hidden md:flex items-center space-x-8 relative">
-          {navLinks.map(({ to, label, icon: Icon }) => {
-            const [isHovered, setIsHovered] = useState(false);
-
-            return (
-              <NavLink
-                key={to}
-                to={to}
-                end
-                className={({ isActive }) =>
-                  classNames(
-                    'relative flex items-center space-x-1 text-white font-medium px-1 py-2 cursor-pointer group',
-                    'hover:text-[#FFDADA] transition-colors duration-300'
-                  )
-                }
-                onMouseEnter={() => setIsHovered(true)}
-                onMouseLeave={() => setIsHovered(false)}
-              >
-                {({ isActive }) => (
-                  <>
-                    <Icon
-                      className={classNames(
-                        'h-5 w-5 transition-colors duration-300',
-                        isActive ? 'text-[#FFDADA]' : 'text-white group-hover:text-[#FFDADA]'
-                      )}
-                      aria-hidden="true"
-                    />
-                    <span>{label}</span>
-
-                    {/* Active underline */}
-                    {isActive && (
-                      <motion.span
-                        layoutId="nav-underline"
-                        className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#FFDADA]"
-                        initial={false}
-                        animate={{ width: '100%', opacity: 1 }}
-                        transition={{ type: 'spring', stiffness: 500, damping: 30 }}
-                      />
+          {navLinks.map(({ to, label, icon: Icon }) => (
+            <NavLink
+              key={to}
+              to={to}
+              end
+              className={({ isActive }) =>
+                classNames(
+                  'relative flex items-center space-x-1 text-white font-medium px-1 py-2 cursor-pointer group',
+                  'hover:text-[#FFDADA] transition-colors duration-300'
+                )
+              }
+              onMouseEnter={() => setHoveredLink(to)}
+              onMouseLeave={() => setHoveredLink(null)}
+            >
+              {({ isActive }) => (
+                <>
+                  <Icon
+                    className={classNames(
+                      'h-5 w-5 transition-colors duration-300',
+                      isActive ? 'text-[#FFDADA]' : 'text-white group-hover:text-[#FFDADA]'
                     )}
+                  />
+                  <span>{label}</span>
 
-                    {/* Hover underline */}
+                  {/* Active underline */}
+                  {isActive && (
+                    <motion.span
+                      layoutId="nav-underline"
+                      className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#FFDADA]"
+                      initial={false}
+                      animate={{ width: '100%', opacity: 1 }}
+                      transition={{ type: 'spring', stiffness: 500, damping: 30 }}
+                    />
+                  )}
+
+                  {/* Hover underline */}
+                  {!isActive && (
                     <motion.span
                       className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#FFDADA]"
                       initial={{ width: 0, opacity: 0 }}
                       animate={{
-                        width: isHovered && !isActive ? '100%' : '0%',
-                        opacity: isHovered && !isActive ? 1 : 0,
+                        width: hoveredLink === to ? '100%' : '0%',
+                        opacity: hoveredLink === to ? 1 : 0,
                       }}
                       transition={{ duration: 0.3, ease: 'easeInOut' }}
                     />
-                  </>
-                )}
-              </NavLink>
-            );
-          })}
+                  )}
+                </>
+              )}
+            </NavLink>
+          ))}
         </div>
 
         {/* Auth Section */}
         <div className="flex items-center space-x-4">
           {user ? (
             <Menu as="div" className="relative inline-block text-left">
-              <Menu.Button className="flex items-center text-white outline-0 border border-white pl-1.5 pr-3 py-1.5 rounded-full space-x-2  hover:bg-white hover:text-[#E63946]  transition">
+              <Menu.Button className="flex items-center text-white outline-0 border border-white pl-1.5 pr-3 py-1.5 rounded-full space-x-2 hover:bg-white hover:text-[#E63946] transition">
                 <img
-                  src={
-                    user.photoURL ||
-                    `https://ui-avatars.com/api/?name=${user.displayName || 'U'}`
-                  }
-                  alt={user.displayName || 'User'}
+                  src={avatarSrc}
+                  alt={displayName}
                   className="h-9 w-9 rounded-full object-cover border border-white"
                 />
-                <span className=" font-medium">{user.displayName || 'User'}</span>
+                <span className="font-medium">{displayName}</span>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="h-4 w-4 text-white"
@@ -271,6 +285,7 @@ export default function Navbar() {
           )}
         </div>
       </nav>
+
       {/* Mobile Menu */}
       {mobileMenuOpen && (
         <div className="md:hidden bg-white shadow-md py-4 space-y-2 absolute top-full left-0 w-full z-40">
