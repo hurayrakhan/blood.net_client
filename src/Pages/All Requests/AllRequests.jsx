@@ -96,18 +96,24 @@ export default function AllRequests() {
   };
 
   return (
-    <section className="max-w-7xl mx-auto px-4 py-10">
-
+    <section className="max-w-7xl mx-auto px-4 py-10 bg-gray-50 min-h-screen">
       <Helmet>
         <title>Blood.net | All Donation Requests</title>
-        <meta name="description" content="Browse all current blood donation requests. Step forward to help someone in need today." />
+        <meta
+          name="description"
+          content="Browse all current blood donation requests. Step forward to help someone in need today."
+        />
       </Helmet>
 
       {/* Header */}
       <Fade direction="up" triggerOnce>
         <div className="mb-6 text-center">
-          <h2 className="text-3xl font-bold text-[#E63946] mb-2">All Blood Donation Requests</h2>
-          <p className="text-gray-600">Help save lives by donating blood today.</p>
+          <h2 className="text-3xl font-bold text-[#E63946] mb-2">
+            All Blood Donation Requests
+          </h2>
+          <p className="text-gray-600">
+            Help save lives by donating blood today.
+          </p>
         </div>
       </Fade>
 
@@ -117,22 +123,24 @@ export default function AllRequests() {
           <input
             type="text"
             placeholder="Search by location or name"
-            className="w-full md:w-1/3 px-4 py-2 border border-gray-300 rounded shadow-sm"
+            className="w-full md:w-1/3 px-4 py-2 border border-gray-200 rounded-lg shadow-sm focus:ring-2 focus:ring-[#E63946] outline-none"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
 
           <select
-            className="w-full md:w-1/4 px-4 py-2 border border-gray-300 rounded shadow-sm"
+            className="w-full md:w-1/4 px-4 py-2 border border-gray-200 rounded-lg shadow-sm focus:ring-2 focus:ring-[#E63946] outline-none"
             value={filterGroup}
             onChange={(e) => setFilterGroup(e.target.value)}
           >
             <option value="">All Blood Groups</option>
-            {['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'].map((group) => (
-              <option key={group} value={group}>
-                {group}
-              </option>
-            ))}
+            {['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'].map(
+              (group) => (
+                <option key={group} value={group}>
+                  {group}
+                </option>
+              )
+            )}
           </select>
         </div>
       </Fade>
@@ -141,7 +149,9 @@ export default function AllRequests() {
       {isLoading ? (
         <p className="text-center text-gray-500">Loading...</p>
       ) : requests.length === 0 ? (
-        <p className="text-center text-gray-500">No donation requests found.</p>
+        <p className="text-center text-gray-500">
+          No donation requests found.
+        </p>
       ) : (
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {requests.map((req, index) => (
@@ -150,39 +160,48 @@ export default function AllRequests() {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
-              className="relative border border-gray-200 rounded-lg p-5 shadow hover:shadow-lg transition bg-white"
+              className="relative bg-white rounded-xl p-5 shadow-md hover:shadow-xl transition-all duration-300 min-h-[340px] flex flex-col justify-between"
             >
               {/* Status Badge */}
               <span
-                className={`absolute top-3 right-3 text-xs px-2 py-1 rounded-full font-semibold ${req.status === 'fulfilled' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'
-                  }`}
+                className={`absolute top-3 right-3 text-xs px-2 py-1 rounded-full font-semibold ${
+                  req.status === 'fulfilled'
+                    ? 'bg-green-100 text-green-700'
+                    : 'bg-yellow-100 text-yellow-700'
+                }`}
               >
                 {req.status || 'pending'}
               </span>
 
-              <h4 className="text-xl font-semibold text-[#E63946] mb-2">{req.recipientName}</h4>
-              <p className="text-sm text-gray-600 mb-1">
-                <strong>Blood Group:</strong> {req.bloodGroup}
-              </p>
-              <p className="text-sm text-gray-600 mb-1">
-                <strong>District:</strong> {req.district}, {req.upazila}
-              </p>
-              <p className="text-sm text-gray-600 mb-1">
-                <strong>Hospital:</strong> {req.hospitalName}
-              </p>
-              <p className="text-sm text-gray-600 mb-1">
-                <strong>Time:</strong> {req.donationDate} at {req.donationTime}
-              </p>
-              <p className="text-sm text-gray-600 mb-2">
-                <strong>Request By:</strong> {req.requesterName}
-              </p>
-              <p className="text-sm text-gray-600 mb-3">
-                <strong>Message:</strong> {req.requestMessage?.slice(0, 70)}...
-              </p>
+              <div>
+                <h4 className="text-xl font-semibold text-[#E63946] mb-2">
+                  {req.recipientName}
+                </h4>
+                <p className="text-sm text-gray-600 mb-1">
+                  <strong>Blood Group:</strong> {req.bloodGroup}
+                </p>
+                <p className="text-sm text-gray-600 mb-1">
+                  <strong>District:</strong> {req.district}, {req.upazila}
+                </p>
+                <p className="text-sm text-gray-600 mb-1">
+                  <strong>Hospital:</strong> {req.hospitalName}
+                </p>
+                <p className="text-sm text-gray-600 mb-1">
+                  <strong>Time:</strong> {req.donationDate} at{' '}
+                  {req.donationTime}
+                </p>
+                <p className="text-sm text-gray-600 mb-2">
+                  <strong>Request By:</strong> {req.requesterName}
+                </p>
+                <p className="text-sm text-gray-600 mb-3">
+                  <strong>Message:</strong>{' '}
+                  {req.requestMessage?.slice(0, 70)}...
+                </p>
+              </div>
 
               <button
                 onClick={() => handleDonateClick(req)}
-                className="w-full bg-[#E63946] text-white py-2 rounded hover:bg-red-600 transition font-semibold"
+                className="w-full bg-[#E63946] text-white py-2 rounded-lg hover:bg-red-600 transition font-semibold mt-3"
               >
                 Donate Now
               </button>
@@ -199,8 +218,11 @@ export default function AllRequests() {
               <button
                 key={i}
                 onClick={() => setPage(i + 1)}
-                className={`px-3 py-1 border rounded font-medium text-sm ${page === i + 1 ? 'bg-[#E63946] text-white' : 'bg-white text-[#E63946] border-[#E63946]'
-                  }`}
+                className={`px-3 py-1 border rounded-lg font-medium text-sm transition ${
+                  page === i + 1
+                    ? 'bg-[#E63946] text-white border-[#E63946]'
+                    : 'bg-white text-[#E63946] border-[#E63946] hover:bg-red-50'
+                }`}
               >
                 {i + 1}
               </button>
@@ -210,10 +232,16 @@ export default function AllRequests() {
       )}
 
       {/* Confirmation Modal */}
-      <Dialog open={showModal} onClose={() => setShowModal(false)} className="fixed z-50 inset-0 overflow-y-auto">
+      <Dialog
+        open={showModal}
+        onClose={() => setShowModal(false)}
+        className="fixed z-50 inset-0 overflow-y-auto"
+      >
         <div className="flex items-center justify-center min-h-screen bg-black/40 px-4">
           <Dialog.Panel className="bg-white rounded-lg shadow-lg max-w-md w-full p-6">
-            <Dialog.Title className="text-xl font-bold text-[#E63946] mb-4">Confirm Donation</Dialog.Title>
+            <Dialog.Title className="text-xl font-bold text-[#E63946] mb-4">
+              Confirm Donation
+            </Dialog.Title>
             <div className="text-sm space-y-2 text-gray-700">
               <p>
                 <strong>Patient:</strong> {selectedRequest?.recipientName}
@@ -222,7 +250,8 @@ export default function AllRequests() {
                 <strong>Blood Group:</strong> {selectedRequest?.bloodGroup}
               </p>
               <p>
-                <strong>Location:</strong> {selectedRequest?.district}, {selectedRequest?.upazila}
+                <strong>Location:</strong> {selectedRequest?.district},{' '}
+                {selectedRequest?.upazila}
               </p>
               <p>
                 <strong>Hospital:</strong> {selectedRequest?.hospitalName}
@@ -237,10 +266,16 @@ export default function AllRequests() {
             </div>
 
             <div className="mt-6 flex justify-end gap-2">
-              <button onClick={() => setShowModal(false)} className="px-4 py-2 bg-gray-300 rounded">
+              <button
+                onClick={() => setShowModal(false)}
+                className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300"
+              >
                 Cancel
               </button>
-              <button onClick={handleConfirmDonate} className="px-4 py-2 bg-[#E63946] text-white rounded hover:bg-red-700">
+              <button
+                onClick={handleConfirmDonate}
+                className="px-4 py-2 bg-[#E63946] text-white rounded-lg hover:bg-red-700"
+              >
                 Confirm Donation
               </button>
             </div>
@@ -253,7 +288,9 @@ export default function AllRequests() {
         <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center">
           <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm">
             <Lottie animationData={thankYouAnimation} loop={false} />
-            <p className="text-center text-lg font-semibold text-[#E63946] mt-2">Thank you for donating! ❤️</p>
+            <p className="text-center text-lg font-semibold text-[#E63946] mt-2">
+              Thank you for donating! ❤️
+            </p>
           </div>
         </div>
       )}
