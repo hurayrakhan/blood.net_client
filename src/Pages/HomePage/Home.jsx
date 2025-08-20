@@ -7,6 +7,7 @@ import Banner from '../../Components/Banner/Banner';
 import Footer from '../../Components/Footer';
 import ContactSection from '../../Components/ContactSection';
 import { Helmet } from 'react-helmet-async';
+import RecentBlogs from '../../Components/RecentBlogs';
 
 const Home = () => {
   return (
@@ -19,6 +20,7 @@ const Home = () => {
       <Banner></Banner>
       <RecentDonationRequests></RecentDonationRequests>
       <OrganizationsSection></OrganizationsSection>
+      <RecentBlogs></RecentBlogs>
       <FundingCTA></FundingCTA>
       <StatisticsSection></StatisticsSection>
       <ContactSection></ContactSection>
