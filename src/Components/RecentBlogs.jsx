@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router';
+import { Fade } from 'react-awesome-reveal';
 import axiosSecure from '../api/axiosSecure';
 
 const RecentBlogs = () => {
@@ -10,17 +11,23 @@ const RecentBlogs = () => {
     queryKey: ['recentBlogs'],
     queryFn: async () => {
       const res = await axiosSecure.get(`/blogs?limit=3&page=1`); 
-      // adjust backend if you want to fetch "latest" sorted by createdAt
+      // adjust backend to sort by createdAt for latest
       return res.data.blogs;
     },
   });
 
   return (
-    <section className="py-12 bg-gray-50">
-      <div className="w-10/12 mx-auto">
-        <h2 className="text-3xl font-bold text-center text-[#E63946] mb-10">
-          Recent Blogs
-        </h2>
+    <section className="py-16 bg-gray-50">
+      <div className="w-10/12 mx-auto text-center">
+        {/* Heading with Fade animation */}
+        <Fade cascade>
+          <h2 className="text-4xl font-bold text-[#E63946] mb-6">
+            Recent Blogs
+          </h2>
+          <p className="text-gray-600 mb-12 max-w-2xl mx-auto">
+            Stay updated with our latest stories, insights, and tips from the community.
+          </p>
+        </Fade>
 
         {isLoading ? (
           <p className="text-center text-[#E63946]">Loading recent blogs...</p>
@@ -66,7 +73,8 @@ const RecentBlogs = () => {
           </div>
         )}
 
-        <div className="flex justify-center mt-10">
+        {/* See All Blogs Button */}
+        <div className="flex justify-center mt-12">
           <button
             onClick={() => navigate('/blogs')}
             className="px-6 py-2 bg-[#E63946] hover:bg-[#A4161A] text-white rounded-lg shadow"

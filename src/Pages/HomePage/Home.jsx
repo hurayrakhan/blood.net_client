@@ -8,6 +8,7 @@ import Footer from '../../Components/Footer';
 import ContactSection from '../../Components/ContactSection';
 import { Helmet } from 'react-helmet-async';
 import RecentBlogs from '../../Components/RecentBlogs';
+import EmergencyHelpline from '../../Components/EmergencyHelpline';
 
 const Home = () => {
   return (
@@ -24,6 +25,7 @@ const Home = () => {
       <FundingCTA></FundingCTA>
       <StatisticsSection></StatisticsSection>
       <ContactSection></ContactSection>
+      <EmergencyHelpline></EmergencyHelpline>
     </div>
   );
 };
