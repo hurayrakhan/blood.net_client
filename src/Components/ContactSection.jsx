@@ -50,7 +50,7 @@ export default function ContactSection() {
 
   return (
     <motion.section
-      className="bg-white text-gray-800 px-4 sm:px-6 lg:px-20 py-16 max-w-7xl mx-auto"
+      className="bg-white overflow-x-hidden text-gray-800 px-4 sm:px-6 lg:px-20 py-16 max-w-7xl mx-auto"
       initial={{ opacity: 0, y: 40 }}
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}

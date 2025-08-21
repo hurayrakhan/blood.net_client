@@ -10,7 +10,7 @@ export default function Banner() {
   const { user } = useContext(AuthContext);
 
   return (
-    <section className="bg-white py-8">
+    <section className="bg-white py-8 overflow-x-hidden">
       <div className="w-10/12 mx-auto flex flex-col-reverse md:flex-row items-center justify-between  gap-10">
         
         {/* Text Content */}
