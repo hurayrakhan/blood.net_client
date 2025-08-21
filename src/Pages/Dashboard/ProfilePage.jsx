@@ -82,23 +82,22 @@ const ProfilePage = () => {
   if (isLoading) return <p className="text-center py-10 text-red-500">Loading profile...</p>;
 
   return (
-    <div className="max-w-3xl mx-auto bg-white shadow-md rounded-2xl p-6 md:p-10">
-
+    <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-2xl p-8 md:p-12">
       <Helmet>
         <title>Blood.net | Donor Profile</title>
-        <meta name="description" content="View detailed profile of the donor including availability and donation history." />
       </Helmet>
 
-      <div className="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">
-        <div className="flex items-center gap-4">
+      {/* Header Section */}
+      <div className="flex flex-col md:flex-row items-center justify-between pb-6 border-b border-gray-200 mb-8">
+        <div className="flex items-center gap-5">
           <img
             src={userData.avatar || 'https://i.ibb.co/MBtjqXQ/default-avatar.png'}
             alt="Profile"
-            className="w-20 h-20 rounded-full object-cover border-2 border-[#E63946]"
+            className="w-24 h-24 rounded-full object-cover border-4 border-[#E63946] shadow-md"
           />
           <div>
-            <h2 className="text-2xl font-bold text-[#E63946]">My Profile</h2>
-            <p className="text-sm text-gray-500">{userData.email}</p>
+            <h2 className="text-3xl font-bold text-gray-800">{userData.name || "Unnamed Donor"}</h2>
+            <p className="text-gray-500 text-sm">{userData.email}</p>
           </div>
         </div>
         <button
@@ -106,71 +105,81 @@ const ProfilePage = () => {
             reset(userData);
             setEditMode(!editMode);
           }}
-          className="bg-[#E63946] hover:bg-[#A4161A] text-white px-5 py-2 rounded-md text-sm font-medium transition"
+          className="bg-[#E63946] hover:bg-[#A4161A] text-white px-6 py-2 rounded-lg font-medium transition transform hover:scale-105"
         >
           {editMode ? 'Cancel' : 'Edit Profile'}
         </button>
       </div>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 md:grid-cols-2 gap-5">
+      {/* Profile Form */}
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="grid grid-cols-1 md:grid-cols-2 gap-6"
+      >
+        {/* Name */}
         <div>
-          <label className="font-medium text-gray-700">Full Name</label>
+          <label className="block mb-1 font-semibold text-gray-700">Full Name</label>
           <input
             type="text"
             defaultValue={userData.name}
             {...register('name', { required: true })}
             disabled={!editMode}
-            className="w-full px-4 py-2 rounded border border-gray-300 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-[#E63946]"
+            className="w-full px-4 py-2 rounded-lg border border-gray-300 bg-gray-50 focus:ring-2 focus:ring-[#E63946] focus:outline-none"
           />
           {errors.name && <p className="text-sm text-red-500">Name is required</p>}
         </div>
 
+        {/* Blood Group */}
         <div>
-          <label className="font-medium text-gray-700">Blood Group</label>
+          <label className="block mb-1 font-semibold text-gray-700">Blood Group</label>
           <input
             type="text"
             defaultValue={userData.bloodGroup}
             {...register('bloodGroup')}
             disabled={!editMode}
-            className="w-full px-4 py-2 rounded border border-gray-300 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-[#E63946]"
+            className="w-full px-4 py-2 rounded-lg border border-gray-300 bg-gray-50 focus:ring-2 focus:ring-[#E63946] focus:outline-none"
           />
         </div>
 
+        {/* District */}
         <div>
-          <label className="font-medium text-gray-700">District</label>
+          <label className="block mb-1 font-semibold text-gray-700">District</label>
           <input
             type="text"
             defaultValue={userData.district}
             {...register('district')}
             disabled={!editMode}
-            className="w-full px-4 py-2 rounded border border-gray-300 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-[#E63946]"
+            className="w-full px-4 py-2 rounded-lg border border-gray-300 bg-gray-50 focus:ring-2 focus:ring-[#E63946] focus:outline-none"
           />
         </div>
 
+        {/* Upazila */}
         <div>
-          <label className="font-medium text-gray-700">Upazila</label>
+          <label className="block mb-1 font-semibold text-gray-700">Upazila</label>
           <input
             type="text"
             defaultValue={userData.upazila}
             {...register('upazila')}
             disabled={!editMode}
-            className="w-full px-4 py-2 rounded border border-gray-300 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-[#E63946]"
+            className="w-full px-4 py-2 rounded-lg border border-gray-300 bg-gray-50 focus:ring-2 focus:ring-[#E63946] focus:outline-none"
           />
         </div>
 
+        {/* Status */}
         <div>
-          <label className="font-medium text-gray-700">Status</label>
+          <label className="block mb-1 font-semibold text-gray-700">Status</label>
           <input
             type="text"
             value={userData.status || 'active'}
             disabled
-            className="w-full px-4 py-2 rounded border border-gray-200 bg-gray-100 text-gray-500"
+            className="w-full px-4 py-2 rounded-lg border border-gray-200 bg-gray-100 text-gray-500"
           />
         </div>
 
+        {/* Avatar Upload */}
         {editMode && (
           <div>
-            <label className="font-medium text-gray-700">Change Profile Picture</label>
+            <label className="block mb-1 font-semibold text-gray-700">Change Profile Picture</label>
             <input
               type="file"
               {...register('avatar')}
@@ -180,12 +189,13 @@ const ProfilePage = () => {
           </div>
         )}
 
+        {/* Save Button */}
         {editMode && (
-          <div className="col-span-2">
+          <div className="col-span-2 mt-4">
             <button
               type="submit"
               disabled={uploading}
-              className="w-full bg-[#E63946] text-white py-3 rounded-md font-semibold hover:bg-[#A4161A] transition"
+              className="w-full bg-[#E63946] text-white py-3 rounded-lg font-semibold hover:bg-[#A4161A] transition"
             >
               {uploading ? 'Saving...' : 'Save Changes'}
             </button>
@@ -193,6 +203,7 @@ const ProfilePage = () => {
         )}
       </form>
     </div>
+
   );
 };
 
