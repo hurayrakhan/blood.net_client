@@ -34,29 +34,17 @@ const ContentManagement = () => {
 
   const handleAddBlog = async (e) => {
     e.preventDefault();
-
     try {
       setUploading(true);
       let imageUrl = '';
-
       if (imageFile) {
         const formData = new FormData();
         formData.append('image', imageFile);
-
-        const imgbbRes = await fetch(`https://api.imgbb.com/1/upload?key=${imageHostKey}`, {
-          method: 'POST',
-          body: formData,
-        });
-
+        const imgbbRes = await fetch(`https://api.imgbb.com/1/upload?key=${imageHostKey}`, { method: 'POST', body: formData });
         const imgbbData = await imgbbRes.json();
         imageUrl = imgbbData?.data?.display_url;
       }
-
-      const res = await axiosSecure.post('/blogs', {
-        ...newBlog,
-        image: imageUrl,
-      });
-
+      const res = await axiosSecure.post('/blogs', { ...newBlog, image: imageUrl });
       if (res.data.insertedId) {
         Swal.fire('Success', 'Blog added successfully', 'success');
         setNewBlog({ title: '', content: '' });
@@ -64,7 +52,7 @@ const ContentManagement = () => {
         setIsModalOpen(false);
         refetch();
       }
-    } catch (err) {
+    } catch {
       Swal.fire('Error', 'Could not add blog', 'error');
     } finally {
       setUploading(false);
@@ -88,39 +76,29 @@ const ContentManagement = () => {
           Swal.fire('Deleted!', 'Blog has been deleted.', 'success');
           refetch();
         }
-      } catch (err) {
+      } catch {
         Swal.fire('Error', 'Something went wrong', 'error');
       }
     }
   };
 
-  // --- NEW: Handle Edit Form Submit ---
   const handleEditSubmit = async (e) => {
     e.preventDefault();
-
     try {
       setUploading(true);
       let imageUrl = editingBlog.image || '';
-
       if (imageFile) {
         const formData = new FormData();
         formData.append('image', imageFile);
-
-        const imgbbRes = await fetch(`https://api.imgbb.com/1/upload?key=${imageHostKey}`, {
-          method: 'POST',
-          body: formData,
-        });
-
+        const imgbbRes = await fetch(`https://api.imgbb.com/1/upload?key=${imageHostKey}`, { method: 'POST', body: formData });
         const imgbbData = await imgbbRes.json();
         imageUrl = imgbbData?.data?.display_url;
       }
-
       const res = await axiosSecure.put(`/blogs/${editingBlog._id}`, {
         title: editingBlog.title,
         content: editingBlog.content,
         image: imageUrl,
       });
-
       if (res.data.modifiedCount > 0) {
         Swal.fire('Success', 'Blog updated successfully', 'success');
         setEditModalOpen(false);
@@ -128,45 +106,41 @@ const ContentManagement = () => {
         setImageFile(null);
         refetch();
       }
-    } catch (err) {
+    } catch {
       Swal.fire('Error', 'Could not update blog', 'error');
     } finally {
       setUploading(false);
     }
   };
 
-  // --- NEW: Handle input changes for editing ---
   const handleEditChange = (field, value) => {
     setEditingBlog({ ...editingBlog, [field]: value });
   };
 
   return (
     <div className="p-6 md:p-10 max-w-7xl mx-auto">
-
       <Helmet>
         <title>Blood.net | Content Management</title>
         <meta name="description" content="Manage blogs and other content on Blood.net." />
       </Helmet>
-      
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold text-[#E63946] border-b pb-2">
-          Manage Blog Content
-        </h2>
+
+      <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
+        <h2 className="text-2xl font-bold text-[#E63946] border-b-2 border-[#E63946] pb-2">Manage Blog Content</h2>
         <button
           onClick={() => setIsModalOpen(true)}
-          className="flex items-center gap-2 bg-[#E63946] text-white px-4 py-2 rounded hover:bg-[#A4161A]"
+          className="flex items-center gap-2 bg-[#E63946] text-white px-4 py-2 rounded hover:bg-[#A4161A] transition"
         >
           <FaPlus /> Add Blog
         </button>
       </div>
 
-      <div className="mb-4">
+      <div className="mb-6">
         <input
           type="text"
           placeholder="Search blogs by title..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="px-4 py-2 border rounded w-full max-w-sm"
+          className="w-full md:w-1/3 px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#E63946]"
         />
       </div>
 
@@ -179,10 +153,14 @@ const ContentManagement = () => {
           {blogData.blogs.map((blog, index) => (
             <div
               key={blog._id}
-              className="border rounded-lg p-4 shadow hover:shadow-md transition bg-white"
+              className="rounded-lg p-4 shadow-sm hover:shadow-md transition bg-white"
             >
               {blog.image && (
-                <img src={blog.image} alt="blog" className="w-full h-48 object-cover rounded mb-3" />
+                <img
+                  src={blog.image}
+                  alt="blog"
+                  className="w-full h-48 object-cover rounded mb-3"
+                />
               )}
               <h3 className="text-lg font-semibold text-[#1D1D1D]">
                 {(page - 1) * limit + index + 1}. {blog.title}
@@ -210,32 +188,8 @@ const ContentManagement = () => {
               </div>
             </div>
           ))}
-
-          {/* Pagination */}
-          <div className="flex justify-end gap-3 pt-4">
-            <button
-              disabled={page === 1}
-              onClick={() => setPage(page - 1)}
-              className={`px-4 py-2 rounded text-white font-medium ${page === 1
-                  ? 'bg-gray-300 cursor-not-allowed'
-                  : 'bg-[#E63946] hover:bg-[#A4161A]'
-                }`}
-            >
-              Prev
-            </button>
-            <span className="flex items-center">Page {page} of {totalPages}</span>
-            <button
-              disabled={page === totalPages}
-              onClick={() => setPage(page + 1)}
-              className={`px-4 py-2 rounded text-white font-medium ${page === totalPages
-                  ? 'bg-gray-300 cursor-not-allowed'
-                  : 'bg-[#E63946] hover:bg-[#A4161A]'
-                }`}
-            >
-              Next
-            </button>
-          </div>
         </div>
+
       )}
 
       {/* Add Blog Modal */}
@@ -243,9 +197,7 @@ const ContentManagement = () => {
         <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
         <div className="fixed inset-0 flex items-center justify-center">
           <Dialog.Panel className="bg-white p-6 rounded-lg shadow-lg w-full max-w-lg">
-            <Dialog.Title className="text-xl font-semibold mb-4 text-[#E63946]">
-              Add New Blog
-            </Dialog.Title>
+            <Dialog.Title className="text-xl font-semibold mb-4 text-[#E63946]">Add New Blog</Dialog.Title>
             <form onSubmit={handleAddBlog} className="space-y-4">
               <input
                 type="text"
@@ -262,40 +214,22 @@ const ContentManagement = () => {
                 className="w-full border px-4 py-2 rounded h-32"
                 required
               />
-              <input
-                type="file"
-                accept="image/*"
-                onChange={(e) => setImageFile(e.target.files[0])}
-                className="block w-full"
-              />
+              <input type="file" accept="image/*" onChange={(e) => setImageFile(e.target.files[0])} className="block w-full" />
               <div className="flex justify-end gap-2">
-                <button
-                  type="button"
-                  onClick={() => setIsModalOpen(false)}
-                  className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="px-4 py-2 bg-[#E63946] text-white rounded hover:bg-[#A4161A]"
-                >
-                  {uploading ? 'Uploading...' : 'Submit'}
-                </button>
+                <button type="button" onClick={() => setIsModalOpen(false)} className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400">Cancel</button>
+                <button type="submit" className="px-4 py-2 bg-[#E63946] text-white rounded hover:bg-[#A4161A]">{uploading ? 'Uploading...' : 'Submit'}</button>
               </div>
             </form>
           </Dialog.Panel>
         </div>
       </Dialog>
 
-      {/* --- Edit Blog Modal --- */}
+      {/* Edit Blog Modal */}
       <Dialog open={editModalOpen} onClose={() => setEditModalOpen(false)} className="relative z-50">
         <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
         <div className="fixed inset-0 flex items-center justify-center">
           <Dialog.Panel className="bg-white p-6 rounded-lg shadow-lg w-full max-w-lg max-h-[90vh] overflow-auto">
-            <Dialog.Title className="text-xl font-semibold mb-4 text-[#E63946]">
-              Edit Blog
-            </Dialog.Title>
+            <Dialog.Title className="text-xl font-semibold mb-4 text-[#E63946]">Edit Blog</Dialog.Title>
             {editingBlog && (
               <form onSubmit={handleEditSubmit} className="space-y-4">
                 <input
@@ -321,31 +255,10 @@ const ContentManagement = () => {
                     <p className="italic text-gray-500">No image uploaded</p>
                   )}
                 </div>
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={(e) => setImageFile(e.target.files[0])}
-                  className="block w-full"
-                />
+                <input type="file" accept="image/*" onChange={(e) => setImageFile(e.target.files[0])} className="block w-full" />
                 <div className="flex justify-end gap-2">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setEditModalOpen(false);
-                      setEditingBlog(null);
-                      setImageFile(null);
-                    }}
-                    className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="submit"
-                    className="px-4 py-2 bg-[#E63946] text-white rounded hover:bg-[#A4161A]"
-                    disabled={uploading}
-                  >
-                    {uploading ? 'Updating...' : 'Update'}
-                  </button>
+                  <button type="button" onClick={() => { setEditModalOpen(false); setEditingBlog(null); setImageFile(null); }} className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400">Cancel</button>
+                  <button type="submit" className="px-4 py-2 bg-[#E63946] text-white rounded hover:bg-[#A4161A]" disabled={uploading}>{uploading ? 'Updating...' : 'Update'}</button>
                 </div>
               </form>
             )}

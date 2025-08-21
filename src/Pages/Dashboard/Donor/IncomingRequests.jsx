@@ -44,13 +44,17 @@ const IncomingRequests = () => {
 
   return (
     <div className="p-6">
-
       <Helmet>
         <title>Blood.net | Incoming Donation Requests</title>
-        <meta name="description" content="View incoming blood donation requests on your dashboard." />
+        <meta
+          name="description"
+          content="View incoming blood donation requests on your dashboard."
+        />
       </Helmet>
 
-      <h2 className="text-2xl font-bold mb-4 text-[#E63946]">Incoming Donation Requests</h2>
+      <h2 className="text-2xl font-bold mb-4 text-[#E63946]">
+        Incoming Donation Requests
+      </h2>
 
       {isLoading ? (
         <p>Loading...</p>
@@ -61,18 +65,24 @@ const IncomingRequests = () => {
           {data.requests.map((req, i) => (
             <div
               key={req._id}
-              className="border p-6 rounded-xl shadow-md bg-white flex flex-col md:flex-row md:items-center justify-between gap-4"
+              className="bg-white rounded-xl shadow-md hover:shadow-lg transition p-6 flex flex-col md:flex-row md:items-center justify-between gap-4"
             >
               <div>
                 <h3 className="text-lg font-semibold text-[#1D1D1D] mb-1">
                   Request #{(page - 1) * limit + i + 1}
                 </h3>
-                <p><strong>From:</strong> {req.recipientName}</p>
-                <span className={`inline-block mt-2 px-2 py-1 rounded text-xs font-semibold ${
-                  req.status === 'pending' ? 'bg-yellow-100 text-yellow-700' :
-                  req.status === 'fulfilled' ? 'bg-green-100 text-green-700' :
-                  'bg-red-100 text-red-700'
-                }`}>
+                <p>
+                  <strong>From:</strong> {req.recipientName}
+                </p>
+                <span
+                  className={`inline-block mt-2 px-2 py-1 rounded text-xs font-semibold ${
+                    req.status === 'pending'
+                      ? 'bg-yellow-100 text-yellow-700'
+                      : req.status === 'fulfilled'
+                      ? 'bg-green-100 text-green-700'
+                      : 'bg-red-100 text-red-700'
+                  }`}
+                >
                   {req.status.toUpperCase()}
                 </span>
               </div>
@@ -108,15 +118,17 @@ const IncomingRequests = () => {
             <button
               onClick={() => setPage(page - 1)}
               disabled={page === 1}
-              className="px-4 py-2 bg-gray-300 rounded"
+              className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 disabled:opacity-50"
             >
               Prev
             </button>
-            <span>Page {page} of {totalPages}</span>
+            <span>
+              Page {page} of {totalPages}
+            </span>
             <button
               onClick={() => setPage(page + 1)}
               disabled={page === totalPages}
-              className="px-4 py-2 bg-gray-300 rounded"
+              className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 disabled:opacity-50"
             >
               Next
             </button>
@@ -130,17 +142,35 @@ const IncomingRequests = () => {
               className="fixed z-50 inset-0 overflow-y-auto"
             >
               <div className="flex items-center justify-center min-h-screen px-4">
-                <Dialog.Panel className="bg-white p-6 rounded-xl max-w-md w-full shadow-xl border">
+                <Dialog.Panel className="bg-white p-6 rounded-xl max-w-md w-full shadow-2xl">
                   <Dialog.Title className="text-xl font-bold text-[#E63946] mb-4">
                     Request Details
                   </Dialog.Title>
-                  <p><strong>From:</strong> {selectedRequest.recipientName}</p>
-                  <p><strong>Email:</strong> {selectedRequest.recipientEmail}</p>
-                  <p><strong>Phone:</strong> {selectedRequest.phone}</p>
-                  <p><strong>Blood Group:</strong> {selectedRequest.bloodGroup}</p>
-                  <p><strong>Location:</strong> {selectedRequest.district}, {selectedRequest.upazila}</p>
-                  <p><strong>Reason:</strong> {selectedRequest.reason}</p>
-                  <p><strong>Status:</strong> {selectedRequest.status}</p>
+                  <div className="space-y-2 text-gray-700">
+                    <p>
+                      <strong>From:</strong> {selectedRequest.recipientName}
+                    </p>
+                    <p>
+                      <strong>Email:</strong> {selectedRequest.recipientEmail}
+                    </p>
+                    <p>
+                      <strong>Phone:</strong> {selectedRequest.phone}
+                    </p>
+                    <p>
+                      <strong>Blood Group:</strong> {selectedRequest.bloodGroup}
+                    </p>
+                    <p>
+                      <strong>Location:</strong> {selectedRequest.district},{' '}
+                      {selectedRequest.upazila}
+                    </p>
+                    <p>
+                      <strong>Reason:</strong> {selectedRequest.reason}
+                    </p>
+                    <p>
+                      <strong>Status:</strong>{' '}
+                      <span className="uppercase">{selectedRequest.status}</span>
+                    </p>
+                  </div>
                   <div className="mt-6 text-right">
                     <button
                       onClick={() => setSelectedRequest(null)}
